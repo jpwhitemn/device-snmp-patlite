@@ -63,7 +63,7 @@ func (c *SNMPClient) GetValues(commands []DeviceCommand) ([]int, error) {
 	}
 	defer g.Default.Conn.Close()
 
-	packets, err2 := g.Default.Get(oids) // Get() accepts up to g.MAX_OIDS
+	packets, err2 := g.Default.Get(oids)
 	if err2 != nil {
 		return results, err2
 	}
@@ -88,16 +88,15 @@ func (c *SNMPClient) GetValue(command DeviceCommand) (int, error) {
 func (c *SNMPClient) SetValues(commands []DeviceCommand) ([]int, error) {
 
 	var results []int
-	//var oids []string
 	var pdus []g.SnmpPDU
 
 	for _, command := range commands {
 		if command.operation == "" {
 			return results, errors.New("Unknown operation: " + command.operation)
 		}
+		// TODO pass in logger
 		pdu := g.SnmpPDU{Name: command.operation, Type: g.Integer, Value: command.value, Logger: nil}
 		pdus = append(pdus, pdu)
-		//oids = append(oids, command.operation)
 	}
 	g.Default.Target = c.ipAddr
 	g.Default.Port = c.ipPort
@@ -108,7 +107,7 @@ func (c *SNMPClient) SetValues(commands []DeviceCommand) ([]int, error) {
 	}
 	defer g.Default.Conn.Close()
 
-	packets, err2 := g.Default.Set(pdus) // Get() accepts up to g.MAX_OIDS
+	packets, err2 := g.Default.Set(pdus)
 	if err2 != nil {
 		return results, err2
 	}

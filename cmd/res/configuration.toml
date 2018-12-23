@@ -1,5 +1,5 @@
 [Service]
-Host = "192.168.1.134"
+Host = "localhost"
 Port = 49992
 ConnectRetries = 3
 Labels = []
