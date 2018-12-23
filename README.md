@@ -10,11 +10,11 @@ Requisite
 GET calls
 ---------
 Get allows you to get the state of the lights and Buzzer.  Here are the allowed GET commands.
-- Issuing GET command to: http://<device service address>:49992/api/v1/device/<device id>/RedLight
-- Issuing GET command to: http://<device service address>:49992/api/v1/device/<device id>/GreenLight
-- Issuing GET command to: http://<device service address>:49992/api/v1/device/<device id>/AmberLight
-- Issuing GET command to: http://<device service address>:49992/api/v1/device/<device id>/Buzzer
-- Issuing GET command to: http://<device service address>:49992/api/v1/device/<device id>/AllLights
+- Issuing GET command to: http://device service address:49992/api/v1/device/<device id>/RedLight
+- Issuing GET command to: http://device service address:49992/api/v1/device/<device id>/GreenLight
+- Issuing GET command to: http://device service address:49992/api/v1/device/<device id>/AmberLight
+- Issuing GET command to: http://device service address:49992/api/v1/device/<device id>/Buzzer
+- Issuing GET command to: http://device service address:49992/api/v1/device/<device id>/AllLights
 
 
 PUT calls
