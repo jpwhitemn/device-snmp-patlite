@@ -21,16 +21,18 @@ PUT calls
 ---------
 Issuing PUT commands to the same URLs above (with PUT method) to set the state of the lights or buzzer.  Put commands require params like following for the Red Light.  
 [{"RedLightControlState":"2"}, {"RedLightTimer":"0"} ]
+
 Setting the lights or buzzer requires also providing the timer value.  The timer is in a numer of seconds before executing the state change.
 
 Get allows you to get the state of the lights and Buzzer.  The lights and buzzer state are represented by integers with the following values:
-*PATLITE light values*
+
+**PATLITE light values**
 - LIGHT_OFF   = 1
 - LIGHT_ON    = 2
 - LIGHT_BLINK = 3
 - LIGHT_FLASH = 5
 
-*PATLITE buzzer values*
+**PATLITE buzzer values**
 - BUZZ_ON       = 5
 - BUZZ_OFF      = 1
 - BUZZ_PATTERN1 = 2
