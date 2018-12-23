@@ -1,13 +1,14 @@
 [Service]
-Host = "device-simple"
-Port = 49990
+Host = "edgex-device-snmp-patlite"
+Port = 49992
 ConnectRetries = 3
 Labels = []
-OpenMsg = "device simple started"
+OpenMsg = "device snmp patlite in Go started"
 ReadMaxLimit = 256
 Timeout = 5000
 EnableAsyncReadings = true
 AsyncBufferSize = 16
+
 
 [Registry]
 Host = "edgex-core-consul"
@@ -58,50 +59,18 @@ Name = "10sec-schedule"
 Frequency = "PT10S"
 
 [[ScheduleEvents]]
-Name = "readTemperature"
+Name = "readLights"
 Schedule = "10sec-schedule"
   [ScheduleEvents.Addressable]
   HTTPMethod = "GET"
-  Path = "/api/v1/device/name/KMC.BAC-121036CE01/CurrentTemperature"
-
-[[ScheduleEvents]]
-Name = "readHumidity"
-Schedule = "10sec-schedule"
-  [ScheduleEvents.Addressable]
-  HTTPMethod = "GET"
-  Path = "/api/v1/device/name/KMC.BAC-121036CE01/CurrentHumidity"
+  Path = "/api/v1/device/name/patlite01/AllLights"
 
 # Pre-define Devices
 [[DeviceList]]
-  Name = "Simple-Device01"
-  Profile = "Simple-Device"
-  Description = "Example of Simple Device"
-  Labels = [ "industrial" ]
+  Name = "patlite01"
+  Profile = "patlite"
   [DeviceList.Addressable]
-    Address = "simple01"
-    Port = 300
-    Protocol = "OTHER"
-
-# Pre-define Schedule Configuration
-[[Schedules]]
-Name = "10sec-schedule"
-Frequency = "PT10S"
-
-[[ScheduleEvents]]
-Name = "turnOnSwitch"
-Parameters = "[{\"Switch\": \"true\"}]"
-Schedule = "10sec-schedule"
-  [ScheduleEvents.Addressable]
-  HTTPMethod = "PUT"
-  Path = "/api/v1/device/name/Simple-Device01/Switch"
-
-[[Schedules]]
-Name = "5sec-schedule"
-Frequency = "PT5S"
-
-[[ScheduleEvents]]
-Name = "readSwtich"
-Schedule = "5sec-schedule"
-  [ScheduleEvents.Addressable]
-  HTTPMethod = "GET"
-  Path = "/api/v1/device/name/Simple-Device01/Switch"
+# change the IP address for your patlite here
+    Address = "192.168.1.144"
+    Port = 161
+    Protocol = "TCP"

@@ -7,19 +7,8 @@
 package driver
 
 const (
-	PATLITE_OID = "1.3.6.1.4.1.20440.4.1.5.1.2.1"
-
-	SET_OID   = ".2"
-	TIMER_OID = ".3"
-	GET_OID   = ".4"
-
-	RED_OID   = ".1"
-	AMBER_OID = ".2"
-	GREEN_OID = ".3"
-	//blue and white are not available on all patlites
-	BLUE_OID   = ".4"
-	WHITE_OID  = ".5"
-	BUZZER_OID = ".6"
+	COMMUNITY_ACCESS = "private"
+	DEFAULT_PORT     = 161
 
 	// PATLITE light values
 	//LIGHT_OFF   = 1

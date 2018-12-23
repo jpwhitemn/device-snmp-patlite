@@ -7,25 +7,26 @@
 package driver
 
 import (
+	"errors"
 	g "github.com/soniah/gosnmp"
 )
 
 // SNMPClient represents the SNMP device is used for getting and setting SNMP device via OID
 type SNMPClient struct {
-	ip_Addr  string
-	base_OID string
+	ipAddr string
+	ipPort uint16
 }
 
-func NewSNMPClient(addr string) SNMPClient {
+func NewSNMPClient(addr string, port uint16) SNMPClient {
 	return SNMPClient{
-		ip_Addr:  addr,
-		base_OID: PATLITE_OID,
+		ipAddr: addr,
+		ipPort: port,
 	}
 }
 
 type DeviceCommand struct {
 	operation string
-	value     uint8
+	value     int
 }
 
 func NewGetDeviceCommand(op string) DeviceCommand {
@@ -36,61 +37,86 @@ func NewGetDeviceCommand(op string) DeviceCommand {
 	}
 }
 
-type snmpCommand struct {
-	op_OID    string
-	state_OID string
-	value     uint8
-}
-
-func (c *SNMPClient) GetValues(commands []DeviceCommand) ([]uint8, error) {
-
-	for key, value := range commands {
-		
+func NewSetDeviceCommand(op string, val int) DeviceCommand {
+	return DeviceCommand{
+		operation: op,
+		value:     val,
 	}
 }
 
-func (c *SNMPClient) GetValue(command DeviceCommand) (uint8, error) {
+func (c *SNMPClient) GetValues(commands []DeviceCommand) ([]int, error) {
 
-	cmd := new(snmpCommand)
-	cmd.op_OID = GET_OID
+	var results []int
+	var oids []string
 
-	switch command.operation {
-	case "RED":
-		cmd.state_OID = RED_OID
-	case "AMBER":
-		cmd.state_OID = AMBER_OID
-	case "GREEN":
-		cmd.state_OID = GREEN_OID
-	case "BLUE":
-		cmd.state_OID = BLUE_OID
-	case "WHITE":
-		cmd.state_OID = WHITE_OID
-	case "BUZZER":
-		cmd.state_OID = BUZZER_OID
+	for _, command := range commands {
+		if command.operation == "" {
+			return results, errors.New("Unknown operation: " + command.operation)
+		}
+		oids = append(oids, command.operation)
 	}
-
-	g.Default.Target = c.ip_Addr
+	g.Default.Target = c.ipAddr
+	g.Default.Port = c.ipPort
 	err := g.Default.Connect()
 	if err != nil {
-		return 0, err
+		return results, err
 	}
 	defer g.Default.Conn.Close()
 
-	oids := []string{c.createOID(cmd)}
-	result, err2 := g.Default.Get(oids) // Get() accepts up to g.MAX_OIDS
+	packets, err2 := g.Default.Get(oids) // Get() accepts up to g.MAX_OIDS
 	if err2 != nil {
-		return 0, err2
+		return results, err2
 	}
 
-	var y uint64
-	// TODO return array or results
-	for _, variable := range result.Variables {
-		y = g.ToBigInt(variable.Value).Uint64()
+	var temp uint64
+	for _, variable := range packets.Variables {
+		temp = g.ToBigInt(variable.Value).Uint64()
+		results = append(results, int(temp))
 	}
-
-	return uint8(y), nil
+	return results, nil
 }
 
-func (c *SNMPClient) createOID(cmd *snmpCommand) string {
-	return c.base_OID + cmd.op_OID + cmd.state_OID
+func (c *SNMPClient) GetValue(command DeviceCommand) (int, error) {
+	commands := []DeviceCommand{command}
+	results, err := c.GetValues(commands)
+	if err != nil {
+		return 0, err
+	}
+	return results[0], nil
+}
+
+func (c *SNMPClient) SetValues(commands []DeviceCommand) ([]int, error) {
+
+	var results []int
+	//var oids []string
+	var pdus []g.SnmpPDU
+
+	for _, command := range commands {
+		if command.operation == "" {
+			return results, errors.New("Unknown operation: " + command.operation)
+		}
+		pdu := g.SnmpPDU{Name: command.operation, Type: g.Integer, Value: command.value, Logger: nil}
+		pdus = append(pdus, pdu)
+		//oids = append(oids, command.operation)
+	}
+	g.Default.Target = c.ipAddr
+	g.Default.Port = c.ipPort
+	g.Default.Community = COMMUNITY_ACCESS
+	err := g.Default.Connect()
+	if err != nil {
+		return results, err
+	}
+	defer g.Default.Conn.Close()
+
+	packets, err2 := g.Default.Set(pdus) // Get() accepts up to g.MAX_OIDS
+	if err2 != nil {
+		return results, err2
+	}
+
+	var temp uint64
+	for _, variable := range packets.Variables {
+		temp = g.ToBigInt(variable.Value).Uint64()
+		results = append(results, int(temp))
+	}
+	return results, nil
 }

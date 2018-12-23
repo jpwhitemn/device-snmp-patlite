@@ -1,9 +1,9 @@
 [Service]
-Host = "localhost"
+Host = "192.168.1.134"
 Port = 49992
 ConnectRetries = 3
 Labels = []
-OpenMsg = "device snmp patlite started"
+OpenMsg = "device snmp patlite in Go started"
 ReadMaxLimit = 256
 Timeout = 5000
 EnableAsyncReadings = true
@@ -50,7 +50,7 @@ FailWaitTime = 10
 [Logging]
 EnableRemote = false
 File = "./device-snmp-patlite.log"
-Level = "DEBUG"
+Level = "INFO"
 
 # Pre-define Schedule Configuration
 [[Schedules]]
@@ -58,19 +58,18 @@ Name = "10sec-schedule"
 Frequency = "PT10S"
 
 [[ScheduleEvents]]
-Name = "readRandom"
+Name = "readLights"
 Schedule = "10sec-schedule"
   [ScheduleEvents.Addressable]
   HTTPMethod = "GET"
-  Path = "/api/v1/device/name/RandNum-Device01/Random"
+  Path = "/api/v1/device/name/patlite01/AllLights"
 
 # Pre-define Devices
 [[DeviceList]]
-  Name = "RandNum-Device01"
-  Profile = "RandNum-Device"
-  Description = "Random Number Generator Device"
-  Labels = [ "random", "test" ]
+  Name = "patlite01"
+  Profile = "patlite"
   [DeviceList.Addressable]
-    Address = "random"
-    Port = 300
-    Protocol = "OTHER"
+# change the IP address for your patlite here
+    Address = "192.168.1.144"
+    Port = 161
+    Protocol = "TCP"
