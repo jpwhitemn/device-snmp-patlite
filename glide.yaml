@@ -11,5 +11,6 @@ import:
   - /pkg/models
   - /pkg/startup
 - package: github.com/soniah/gosnmp
+  version: =1.16
 - package: github.com/golang/mock/gomock
 
