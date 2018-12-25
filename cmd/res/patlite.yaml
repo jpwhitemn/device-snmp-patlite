@@ -156,7 +156,7 @@ resources:
 
     set:
       - { index: "1", operation: "set", object: "GreenLightControlState", property: "value", parameter: "GreenLightControlState" }
-      - { index: "2", operation: "set", object: "GreenLightTimer", property: "value", parameter: "0"}
+      - { index: "2", operation: "set", object: "GreenLightTimer", property: "value", parameter: "GreenLightTimer"}
   -
     name: AmberLight
     get:
@@ -164,7 +164,7 @@ resources:
 
     set:
       - { index: "1", operation: "set", object: "AmberLightControlState", property: "value", parameter: "AmberLightControlState" }
-      - { index: "2", operation: "set", object: "AmberLightTimer", property: "value", parameter: "0"}
+      - { index: "2", operation: "set", object: "AmberLightTimer", property: "value", parameter: "AmberLightTimer"}
 
   -
     name: Buzzer
@@ -173,7 +173,7 @@ resources:
 
     set:
       - { index: "1", operation: "set", object: "BuzzerControlState", property: "value", parameter: "BuzzerControlState" }
-      - { index: "2", operation: "set", object: "BuzzerTimer", property: "value", parameter: "0"}
+      - { index: "2", operation: "set", object: "BuzzerTimer", property: "value", parameter: "BuzzerTimer"}
 
 
   -
@@ -242,7 +242,7 @@ commands:
 
     put:
       path: "/api/v1/device/{deviceId}/GreenLight"
-      parameterNames: ["GreenLightControlState"]
+      parameterNames: ["GreenLightControlState", "GreenLightTimer"]
       responses:
         -
           code: "204"
@@ -270,7 +270,7 @@ commands:
 
     put:
       path: "/api/v1/device/{deviceId}/AmberLight"
-      parameterNames: ["AmberLightControlState"]
+      parameterNames: ["AmberLightControlState", "AmberLightTimer"]
       responses:
         -
           code: "204"
@@ -298,7 +298,7 @@ commands:
 
     put:
       path: "/api/v1/device/{deviceId}/Buzzer"
-      parameterNames: ["BuzzerControlState"]
+      parameterNames: ["BuzzerControlState", "BuzzerTimer"]
       responses:
         -
           code: "204"
