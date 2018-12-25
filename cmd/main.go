@@ -14,7 +14,7 @@ import (
 
 const (
 	version     string = "1.0.0"
-	serviceName string = "device-snmp-patlite-go"
+	serviceName string = "device-snmp-patlite"
 )
 
 func main() {
